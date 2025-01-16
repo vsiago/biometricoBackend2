@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { salvarUsuario, buscarUsuarioPorEmail } from '../services/usuarioService.js';
+import { buscarUsuarioPorEmail } from '../services/usuarioService.js';
 import Usuario from '../models/Usuario.js';
+import UnidadeSaude from '../models/UnidadeSaude.js';
 
 export const registrarMaster = async (req, res) => {
   try {
@@ -35,19 +36,29 @@ export const registrarAdministradorUnidade = async (req, res) => {
 
     // Verifica se o usuário logado tem permissão de "Master"
     if (req.user.role !== 'Master') {
-      return res.status(403).json({ error: 'Somente o usuário master pode criar administradores de unidades.' });
+      return res.status(403).json({ error: 'Somente o usuário Master pode criar administradores de unidades.' });
     }
 
-    // Verifica se a unidadeId foi fornecida e é válida
+    // Verifica se a unidadeId foi fornecida
     if (!unidadeId) {
       return res.status(400).json({ error: 'unidadeId é necessário para associar o administrador.' });
     }
+
+    // Verifica se a unidadeId existe no banco de dados
+    const unidadeExiste = await UnidadeSaude.findById(unidadeId);
+    if (!unidadeExiste) {
+      return res.status(404).json({ error: 'A unidade fornecida não existe.' });
+    }
+
+    // Gera o hash da senha
+    const salt = await bcrypt.genSalt(10);
+    const senhaHash = await bcrypt.hash(senha, salt);
 
     // Criação do administrador para a unidade
     const novoAdministrador = new Usuario({
       nome,
       email,
-      senha,
+      senha: senhaHash,
       role: 'Administrador', // Papel do usuário como administrador
       unidadeId, // Atribuição da unidade de saúde
     });
@@ -57,20 +68,29 @@ export const registrarAdministradorUnidade = async (req, res) => {
 
     return res.status(201).json(novoAdministrador);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Erro ao criar administrador.', details: err.message });
+    console.error('Erro ao registrar administrador da unidade:', err);
+    return res.status(500).json({ error: 'Erro ao registrar administrador da unidade.' });
   }
 };
 
 
+
 export const login = async (req, res) => {
   try {
-    const { email, senha } = req.body;
+    const { email, senha, unidadeId } = req.body; // Agora esperamos o unidadeId para administradores de unidade
 
     // Buscar o usuário pelo email
     const usuario = await buscarUsuarioPorEmail(email);
     if (!usuario) {
       return res.status(401).json({ error: 'Credenciais inválidas.' });
+    }
+
+    // Se o usuário for um administrador de unidade, verifica se o unidadeId corresponde
+    if (usuario.role === 'Administrador') {
+      // Verifica se o unidadeId foi fornecido e se é válido
+      if (!unidadeId || usuario.unidadeId !== unidadeId) {
+        return res.status(403).json({ error: 'Você não tem permissão para acessar esta unidade.' });
+      }
     }
 
     // Verificar a senha
@@ -81,7 +101,7 @@ export const login = async (req, res) => {
 
     // Gerar token JWT
     const token = jwt.sign(
-      { id: usuario._id, role: usuario.role },
+      { id: usuario._id, role: usuario.role, unidadeId: usuario.unidadeId }, // Incluindo unidadeId no payload, se aplicável
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
@@ -92,6 +112,7 @@ export const login = async (req, res) => {
     res.status(500).json({ error: 'Erro ao realizar login.' });
   }
 };
+
 
 // Listar todos os usuários Master
 export const listarUsuariosMaster = async (req, res) => {

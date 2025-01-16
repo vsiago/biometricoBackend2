@@ -5,8 +5,8 @@ POST http://localhost:8888/api/auth/registrar-master
 Content-Type: application/json
 
 {
-  "nome": "Iagaosouza",
-  "email": "vsiagos22@gmail.com",
+  "nome": "Rony",
+  "email": "rony22@gmail.com",
   "senha": "12341568"
 }
 
@@ -22,16 +22,16 @@ Content-Type: application/json
 
 ### LISTAR USUÁRIOS MASTER ------------------------------------------
 GET http://localhost:8888/api/auth/usuarios-master
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODk1OWVhM2M2ZTdiMGY1YzBmYWQ4YiIsInJvbGUiOiJNYXN0ZXIiLCJpYXQiOjE3MzcwNTQ3NDcsImV4cCI6MTczNzE0MTE0N30.7psJ_bBILGcw_eAuzXZFqnyTOwBMmagZjTP-IusWoyA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODk2MGQ1MDQwOTY0OGIxMDI3MTliMiIsInJvbGUiOiJNYXN0ZXIiLCJpYXQiOjE3MzcwNTY2ODcsImV4cCI6MTczNzE0MzA4N30.rw9rzPh6BhMW_CYUSntzpT1WKUoihEciY9LjdB34du4
 
 ### CRIAR UNIDADE DE SAÚDE
 
 POST http://localhost:8888/api/unidadesaude
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODk1OWVhM2M2ZTdiMGY1YzBmYWQ4YiIsInJvbGUiOiJNYXN0ZXIiLCJpYXQiOjE3MzcwNTQ3NDcsImV4cCI6MTczNzE0MTE0N30.7psJ_bBILGcw_eAuzXZFqnyTOwBMmagZjTP-IusWoyA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODk2MGQ1MDQwOTY0OGIxMDI3MTliMiIsInJvbGUiOiJNYXN0ZXIiLCJpYXQiOjE3MzcwNTY2ODcsImV4cCI6MTczNzE0MzA4N30.rw9rzPh6BhMW_CYUSntzpT1WKUoihEciY9LjdB34du4
 
 {
-  "nome": "Hospital São Francisco Xavier",
+  "nome": "Hospital São Francisco Xavier2",
   "endereco": "Centro de Itaguaí"
 }
 
@@ -48,11 +48,11 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ODk1OWVhM2M2ZTdiMGY1YzBmYWQ4YiIsInJvbGUiOiJNYXN0ZXIiLCJpYXQiOjE3MzcwNTQ3NDcsImV4cCI6MTczNzE0MTE0N30.7psJ_bBILGcw_eAuzXZFqnyTOwBMmagZjTP-IusWoyA
 
 {
-  "nome": "Iago Souza",
+  "nome": "Rony GAy",
   "senha": "81510156",
-  "email": "vsiago23321a@unidade.com",
+  "email": "ronygay@unidade.com",
   "role": "Administrador",
-   "unidadeId": "67895c3a56130db32a2f8b87"
+   "unidadeId": "678961e00409648b102719ba"
 }
 
 ### LISTAR USUÁRIO ADMINISTRATIVO NA UNIDADE CRIADA ---------------------
